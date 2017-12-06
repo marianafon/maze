@@ -22,6 +22,7 @@ void criarLabirinto(int Maze[], int nColunas, int nLinhas, int paredes[], bool t
 void imprimir(int Maze[], int tamanhoTotal, int nColunas, int paredes[]);
 int buscarCelulaVizinhaParede(int posicao, int nColunas, int nLinhas, int parede);
 void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool totalConexo, DisjSets &conjuntos);
+void imprimirDesenho(int Maze[], int tamanhoTotal, int nColunas, int paredes[], int nLinhas);
 
 int main( )
 {
@@ -34,8 +35,8 @@ int main( )
 
     int paredes[] = {TopWall, RightWall, BottomWall, LeftWall};
 
-    int nColunas = 2;
-    int nLinhas = 2;
+    int nColunas = 5;
+    int nLinhas = 5;
     bool totalConexo = 1;
     int tamanhoTotal = nColunas * nLinhas;
 
@@ -46,14 +47,17 @@ int main( )
     int Maze[ tamanhoTotal ];
     criarLabirinto(Maze, nColunas, nLinhas, paredes, 1);    
 
-    imprimir(Maze, tamanhoTotal, nColunas, paredes);
+    //imprimir(Maze, tamanhoTotal, nColunas, paredes);
+    imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas);
 
     //Derrubar entrada e saída
     derrubarParede(Maze, 0, LeftWall, buscarCelulaVizinhaParede(0, nColunas, nLinhas, LeftWall));
     derrubarParede(Maze, tamanhoTotal - 1, RightWall, buscarCelulaVizinhaParede(tamanhoTotal - 1, nColunas, nLinhas, RightWall));
 
-    imprimir(Maze, tamanhoTotal, nColunas, paredes);
-
+    //imprimir(Maze, tamanhoTotal, nColunas, paredes);
+    imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas);
+    int qualquerCoisa;
+    cin >> qualquerCoisa;
     //Encontrar caminho segundo parâmetro
     criarCaminho(Maze, nColunas, nLinhas, paredes, totalConexo, conjuntos);
 
@@ -193,26 +197,79 @@ int buscarCelulaVizinhaParede(int posicao, int nColunas, int nLinhas, int parede
     }
 }
 
-/*
-void imprimirDesenho(int Maze[], int tamanhoTotal, int nColunas, int paredes[])
+void imprimirParede(int parede)
 {
-    for (int i=0; i < (tamanhoTotal); i++ )
+
+}
+
+
+void imprimirDesenho(int Maze[], int tamanhoTotal, int nColunas, int paredes[], int nLinhas)
+{
+    bool condicao = true;
+    int count = 0;
+    int celulaInicial = 0;
+    while(condicao)
     {
-        if((i % nColunas) == 0 && i > 0)
-            cout << endl;
-
-        //cout << Maze[i] << "|";        
-
-        switch(Maze[i])
+        celulaInicial = count * nColunas;
+        //cout << "cout " << count << "posicao ini" << celulaInicial << endl;
+        //Percorre a linha inteira
+        for(int i = celulaInicial; i < (celulaInicial + nColunas); i++)
         {
-            case paredes[0]: //norte
-                break;
+            //Imprime norte
+            if(verificarParedeIntacta(Maze, i, paredes[0]))
+            {
+                cout << "---";
+            }else{
+                cout << "   ";
+            }    
         }
+        cout << endl;
+        //Percorre a linha inteira
+        for(int i = celulaInicial; i < (celulaInicial + nColunas); i++)
+        {
+            //Imprime oeste
+            if(verificarParedeIntacta(Maze, i, paredes[3]))
+            {
+                cout << "|";
+                //Imprime leste
+                if(verificarParedeIntacta(Maze, i, paredes[1]))
+                {
+                    cout << " |";
+                }
+            }else{
+                //Imprime leste
+                if(verificarParedeIntacta(Maze, i, paredes[1]))
+                {
+                    cout << "  |";
+                }else{
+                    cout << "   ";
+                }
+            }
+        }
+        cout << endl;   
+        //Percorre a linha inteira
+        for(int i = celulaInicial; i < (celulaInicial + nColunas); i++)
+        {
+            //Imprime sul
+            if(verificarParedeIntacta(Maze, i, paredes[2]))
+            {
+                cout << "---";
+            }else{
+                cout << "   ";
+            }    
+        }
+        cout << endl;
+
+        if(count == nLinhas - 1){
+            condicao = false;
+        }
+
+        count++;        
     }
 
     cout << endl << endl;   
 }
-*/
+
 
 void imprimir(int Maze[], int tamanhoTotal, int nColunas, int paredes[])
 {
@@ -301,4 +358,5 @@ void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool tot
     cout << "CONCLUIDO" << endl;
     
     imprimir(Maze, tamanhoTotal, nColunas, paredes);
+    conjuntos.print();
 }
