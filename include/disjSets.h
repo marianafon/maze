@@ -14,6 +14,7 @@
  * Elements in the set are numbered starting at 0.
  */
 using std::vector;
+using std::cout;
 class DisjSets
 {
   public:
@@ -57,6 +58,14 @@ class DisjSets
             }
         }
         disjCount--;
+    }
+
+    void print()
+    {
+        for(int i = 0; i<elementsCount; i++)
+        {
+            cout << i << "{" << s[i] << "} ";
+        }
     }
 
     // Return the current number of disjoint sets
