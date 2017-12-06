@@ -29,6 +29,9 @@ class DisjSets
         {
             s.push_back(i);
         }
+
+        disjCount = numElements;
+        elementsCount = numElements;
     }
 
     // Return set's name containing x
@@ -38,16 +41,34 @@ class DisjSets
     }
     // Return set's name containing x, with path compression.
     //int find( int x ); ??
+
     // Merge two sets, by size or by estimated heigh (also knwon as rank).
     void unionSets( int root1, int root2 )
     {
-        
+        //Unir os elementos do conjunto que contém root1 com os dos que contém root2
+        int disjRoot1 = s[root1];
+        int disjRoot2 = s[root2];
+
+        for(int i = 0; i<elementsCount; i++)
+        {
+            if(s[i] == disjRoot2)
+            {
+                s[i] = disjRoot1;
+            }
+        }
+        disjCount--;
     }
+
     // Return the current number of disjoint sets
-    int size( ) const;
+    int size( ) const
+    {
+        return disjCount;
+    }
 
   private:
     vector<int> s;
+    int disjCount;
+    int elementsCount;
 };
 
 //#include "disjSets.inl"
