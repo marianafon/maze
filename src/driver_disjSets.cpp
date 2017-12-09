@@ -7,6 +7,7 @@
 #include <string>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "../include/disjSets.h"
 
@@ -35,71 +36,30 @@ int main( )
 
     int paredes[] = {TopWall, RightWall, BottomWall, LeftWall};
 
-    int nColunas = 5;
-    int nLinhas = 5;
+    int nColunas = 10;
+    int nLinhas = 10;
     bool totalConexo = 1;
     int tamanhoTotal = nColunas * nLinhas;
 
     //Criar os conjuntos
+    cout << "Criando conjuntos..." << endl;
     DisjSets conjuntos(tamanhoTotal);
 
     //Criar Labirinto
+    cout << "Criando labirinto..." << endl;
     int Maze[ tamanhoTotal ];
     criarLabirinto(Maze, nColunas, nLinhas, paredes, 1);    
 
     //imprimir(Maze, tamanhoTotal, nColunas, paredes);
     imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas);
 
-    //Derrubar entrada e saída
-    derrubarParede(Maze, 0, LeftWall, buscarCelulaVizinhaParede(0, nColunas, nLinhas, LeftWall));
-    derrubarParede(Maze, tamanhoTotal - 1, RightWall, buscarCelulaVizinhaParede(tamanhoTotal - 1, nColunas, nLinhas, RightWall));
-
-    //imprimir(Maze, tamanhoTotal, nColunas, paredes);
-    imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas);
-    int qualquerCoisa;
-    cin >> qualquerCoisa;
-    //Encontrar caminho segundo parâmetro
+    //Aguarda, abre entrada e saída e inicia criação do caminho
+    cout << "Criando caminho ..." << endl;
+    sleep(3);
+    
+    //Encontrar caminho segundo parâmetro e imprimindo andamento
     criarCaminho(Maze, nColunas, nLinhas, paredes, totalConexo, conjuntos);
 
-
-
-
-
-
-
-    //testes
-    //imprimir(Maze, tamanhoTotal, nColunas, paredes);
-    //derrubarParede(Maze, 0, LeftWall);
-    //cout << endl;
-    //imprimir(Maze, tamanhoTotal, nColunas, paredes);
-
-
-    //=== Unit tests start here
-    /*
-    {
-        cout << endl;
-        cout << ">>> Unit teste #" << ++n_unit << ": empty.\n";
-
-        // Create a empty PQ.
-        //PQ<int, decltype(compare) > h( compare );
-
-        //assert( h.size() == 0 );
-        //assert( h.empty() == true );
-        //h.push(1);
-        //assert( h.empty() == false );
-
-        //std::cout << ">>> Passed!\n\n";
-
-        cout << endl << "0 -> " << Maze[0];
-        verificarParedeIntacta(Maze, 0, BottomWall);
-        derrubarParede(Maze, 0, BottomWall);
-        verificarParedeIntacta(Maze, 0, BottomWall);
-        cout << endl << "0 -> Bottom " << Maze[0];
-        derrubarParede(Maze, 0, RightWall);
-        verificarParedeIntacta(Maze, 0, RightWall);
-        cout << endl << "0 -> Right " << Maze[0];
-    }
-    */
     return 0;
 }
 
@@ -149,7 +109,7 @@ void derrubarParede(int Maze[], int posicao, int parede, int vizinho){
     //Derrubar parede do vizinho
     Maze[ vizinho ] = Maze[ vizinho ] & ~paredeOposta;
 
-    cout << "Parede " << parede << " da posicao " << posicao << " derrubada!" << endl;
+    //cout << "Parede " << parede << " da posicao " << posicao << " derrubada!" << endl;
 }
 
 int buscarCelulaVizinhaParede(int posicao, int nColunas, int nLinhas, int parede)
@@ -211,8 +171,7 @@ void imprimirDesenho(int Maze[], int tamanhoTotal, int nColunas, int paredes[], 
     while(condicao)
     {
         celulaInicial = count * nColunas;
-        //cout << "cout " << count << "posicao ini" << celulaInicial << endl;
-        //Percorre a linha inteira
+
         for(int i = celulaInicial; i < (celulaInicial + nColunas); i++)
         {
             //Imprime norte
@@ -286,28 +245,24 @@ void imprimir(int Maze[], int tamanhoTotal, int nColunas, int paredes[])
 }
 
 void criarLabirinto(int Maze[], int nColunas, int nLinhas, int paredes[], bool totalConexo){
-    //int TopWall, int RightWall, int BottomWall, int LeftWall
+    //cout << "Criando Labirinto " << nLinhas << "x" << nColunas << " ..." << endl;
+    
     int tamanhoTotal = nColunas * nLinhas;
 
     //Criar o labirinto em si
     for (int i=0; i < (tamanhoTotal); i++ )
     {
-        //if((i % nColunas) == 0 && i > 0)
-        //   cout << endl;
-
         //Maze[ i ] = TopWall | RightWall | BottomWall | LeftWall;
         Maze [ i ] = paredes[0] | paredes[1] | paredes[2] | paredes[3];
-        //cout << Maze[i] << "|";        
-    }
-    //conjuntos.s[]
+     
+    }    
 }
 
 void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool totalConexo, DisjSets &conjuntos)
 {
-    int tamanhoTotal = nColunas * nLinhas;
     //Criar caminho válido ou totalmente conexo
 
-    //conjuntos.print();
+    int tamanhoTotal = nColunas * nLinhas;
     int posicaoInicial = 0;
     int posicaoFinal = tamanhoTotal - 1;
     int celulaRand = 0;
@@ -315,14 +270,20 @@ void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool tot
     int k = 0; //posicao auxiliar para definir parede
     int celulaVizinha;
 
+    //Derrubar entrada e saída
+    derrubarParede(Maze, 0, paredes[3], buscarCelulaVizinhaParede(0, nColunas, nLinhas, paredes[3]));
+    derrubarParede(Maze, tamanhoTotal - 1, paredes[1], buscarCelulaVizinhaParede(tamanhoTotal - 1, nColunas, nLinhas, paredes[1]));    
+
+    imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas);
+    sleep(1);
+
     srand (time(0));
 
     while(!concluido){
         celulaRand = rand() % posicaoFinal + posicaoInicial; //numero aleatorio entre posicao inicial e final
-        //srand (time(0));
         k = rand() % 3 + 0; //entre 0 e 3, pois pode ser uma das 4 paredes. 0->Norte, 1->Leste, 2->Sul, 3->Oeste
 
-        cout << "Celula rand: " << celulaRand << " k rand: " << k << " posicao rand: " << paredes[k] << endl;
+        //cout << "Celula rand: " << celulaRand << " k rand: " << k << " posicao rand: " << paredes[k] << endl;
 
         celulaVizinha = buscarCelulaVizinhaParede(celulaRand, nColunas, nLinhas, paredes[k]); //
         bool dentro = 0;
@@ -342,11 +303,16 @@ void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool tot
                 concluido = 1;
             }
             //Depois: Válido
-    
-            conjuntos.print();
-            cout << endl;
-            imprimir(Maze, tamanhoTotal, nColunas, paredes);
+            
+            //conjuntos.print();
+            //cout << endl;
+            //imprimir(Maze, tamanhoTotal, nColunas, paredes);
+            //imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas);
             dentro = 1;
+
+
+            imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas);
+            usleep(250 * 1000);
         }
 
         int qualquerCoisa = 0;
@@ -355,8 +321,11 @@ void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool tot
 
     }
 
-    cout << "CONCLUIDO" << endl;
-    
+    cout << endl;
     imprimir(Maze, tamanhoTotal, nColunas, paredes);
     conjuntos.print();
+    cout << endl;
+    imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas);
+
+    cout << "CONCLUIDO" << endl;
 }
