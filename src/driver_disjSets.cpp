@@ -68,6 +68,9 @@ int main( )
     //Encontrar caminho segundo parâmetro e imprimindo andamento
     criarCaminho(Maze, nColunas, nLinhas, paredes, totalConexo, conjuntos, MazeSolution);
 
+    //Encontrar Solução
+    encontrarSolucao(Maze, nColunas, nLinhas, paredes, MazeSolution);
+
     return 0;
 }
 
@@ -164,7 +167,8 @@ int buscarCelulaVizinhaParede(int posicao, int nColunas, int nLinhas, int parede
 
     cout << endl;
 
-    if(celulaVizinha > 0 && celulaVizinha < (nColunas * nLinhas)){
+    //era maior que e mudei pra maior ou igual a zero!
+    if(celulaVizinha >= 0 && celulaVizinha < (nColunas * nLinhas)){
         return celulaVizinha;
     }else{
         return -1;  
@@ -213,11 +217,11 @@ void imprimirDesenho(int Maze[], int tamanhoTotal, int nColunas, int paredes[], 
                 //Imprime leste
                 if(verificarParedeIntacta(Maze, i, paredes[1]))
                 {
-                    cout << espacoAux << "  |";
-                    //cout << espacoAux << MazeSolution[i] << "|";
+                    //cout << espacoAux << "  |";
+                    cout << espacoAux << MazeSolution[i] << "|";
                 }else{
-                    cout << espacoAux << "   ";
-                    //cout << espacoAux << " " << MazeSolution[i] << " ";
+                    //cout << espacoAux << "   ";
+                    cout << espacoAux << MazeSolution[i] << " ";
                 }
             }else{
                 if((i % nColunas) == 0) //espaço onde ficaria a parede oeste da primeira coluna
@@ -226,11 +230,11 @@ void imprimirDesenho(int Maze[], int tamanhoTotal, int nColunas, int paredes[], 
                 //Imprime leste
                 if(verificarParedeIntacta(Maze, i, paredes[1]))
                 {
-                    cout << "  |";
-                    //cout << MazeSolution[i] << "|";
+                    //cout << "  |";
+                    cout << MazeSolution[i] << "|";
                 }else{
-                    cout << "   ";
-                    //cout << MazeSolution[i] << " ";
+                    //cout << "   ";
+                    cout << MazeSolution[i] << " ";
                 }
             }
         }
@@ -305,7 +309,7 @@ void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool tot
     derrubarParede(Maze, tamanhoTotal - 1, paredes[1], buscarCelulaVizinhaParede(tamanhoTotal - 1, nColunas, nLinhas, paredes[1]));    
 
     imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas, MazeSolution);
-    sleep(1);
+    //sleep(1);
 
     srand (time(0));
 
@@ -341,7 +345,7 @@ void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool tot
 
 
             imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas, MazeSolution);
-            usleep(150 * 1000);
+            usleep(10 * 1000);
         }
     }
 
@@ -356,8 +360,11 @@ void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool tot
 
 bool backtracking(int Maze[], int nLinhas, int nColunas, string MazeSolution[], int posicaoAtual ,int posicaoFinal, int paredes[])
 {
+    int tamanhoTotal = nColunas * nLinhas;
     int posicaoVizinha = 0;
     bool acessivel = false;
+    bool resultado = false;
+    int qualquerCoisa = 0;
 
     //Encontrou solução final
     if(posicaoAtual == posicaoFinal)
@@ -369,34 +376,47 @@ bool backtracking(int Maze[], int nLinhas, int nColunas, string MazeSolution[], 
     //Não encontrou a solução final, então assume que essa posição faz parte da solução e
     //verifica na ordem: leste, sul, oeste, norte
     MazeSolution[posicaoAtual] = "**";
+    //Imprime a solução até aqui
+    imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas, MazeSolution);
+    usleep(150 * 1000);
 
     //1 => 2 - LESTE 
     posicaoVizinha = buscarCelulaVizinhaParede(posicaoAtual, nColunas, nLinhas, paredes[1]);
-    acessivel = verificarParedeIntacta(Maze, posicaoAtual, paredes[1]);
-            
-    if((posicaoVizinha != -1) && acessivel)
-        return true;
+    acessivel = !verificarParedeIntacta(Maze, posicaoAtual, paredes[1]);
+    cout << "Posicao Atual: " << posicaoAtual << " Posicao Vizinha L: " << posicaoVizinha << " Acessivel: " << acessivel << endl;
+    //cin >> qualquerCoisa;
+
+    if((posicaoVizinha != -1) && acessivel && MazeSolution[posicaoVizinha] == "  "){
+        if(backtracking(Maze, nLinhas, nColunas, MazeSolution, posicaoVizinha, posicaoFinal, paredes) == true)
+            return true;
+    }
 
     //2 => 4 - SUL 
     posicaoVizinha = buscarCelulaVizinhaParede(posicaoAtual, nColunas, nLinhas, paredes[2]);
-    acessivel = verificarParedeIntacta(Maze, posicaoAtual, paredes[2]);
-            
-    if((posicaoVizinha != -1) && acessivel)
-        return true;
+    acessivel = !verificarParedeIntacta(Maze, posicaoAtual, paredes[2]);
+    cout << "Posicao Atual: " << posicaoAtual << " Posicao Vizinha S: " << posicaoVizinha << " Acessivel: " << acessivel << endl;
+    if((posicaoVizinha != -1) && acessivel && MazeSolution[posicaoVizinha] == "  "){
+        if(backtracking(Maze, nLinhas, nColunas, MazeSolution, posicaoVizinha, posicaoFinal, paredes) == true)
+            return true;
+    }
     
     //3 => 8 - OESTE 
     posicaoVizinha = buscarCelulaVizinhaParede(posicaoAtual, nColunas, nLinhas, paredes[3]);
-    acessivel = verificarParedeIntacta(Maze, posicaoAtual, paredes[3]);
-            
-    if((posicaoVizinha != -1) && acessivel)
-        return true;
-    
+    acessivel = !verificarParedeIntacta(Maze, posicaoAtual, paredes[3]);
+    cout << "Posicao Atual: " << posicaoAtual << " Posicao Vizinha O: " << posicaoVizinha << " Acessivel: " << acessivel << endl;       
+    if((posicaoVizinha != -1) && acessivel && MazeSolution[posicaoVizinha] == "  "){
+        if(backtracking(Maze, nLinhas, nColunas, MazeSolution, posicaoVizinha, posicaoFinal, paredes) == true)
+            return true;
+    }
+        
     //0 => 1 - NORTE
     posicaoVizinha = buscarCelulaVizinhaParede(posicaoAtual, nColunas, nLinhas, paredes[0]);
-    acessivel = verificarParedeIntacta(Maze, posicaoAtual, paredes[0]);
-            
-    if((posicaoVizinha != -1) && acessivel)
-        return true;
+    acessivel = !verificarParedeIntacta(Maze, posicaoAtual, paredes[0]);
+    cout << "Posicao Atual: " << posicaoAtual << " Posicao Vizinha N: " << posicaoVizinha << " Acessivel: " << acessivel << endl;        
+    if((posicaoVizinha != -1) && acessivel && MazeSolution[posicaoVizinha] == "  "){
+        if(backtracking(Maze, nLinhas, nColunas, MazeSolution, posicaoVizinha, posicaoFinal, paredes) == true)
+            return true;
+    }
     
     //Define como não fazendo parte da solução e retorna falso
     MazeSolution[posicaoAtual] = "xx";
@@ -417,5 +437,6 @@ bool encontrarSolucao(int Maze[], int nColunas, int nLinhas, int paredes[], stri
     }
 
     //Imprime a solução
+    cout << "CAMINHO ENCONTRADO!! :D" << endl;
     imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas, MazeSolution);
 }
