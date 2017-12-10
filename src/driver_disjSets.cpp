@@ -38,7 +38,7 @@ int main( )
 
     int nColunas = 10;
     int nLinhas = 10;
-    bool totalConexo = 1;
+    bool totalConexo = 0;
     int tamanhoTotal = nColunas * nLinhas;
 
     //Criar os conjuntos
@@ -166,36 +166,47 @@ void imprimirParede(int parede)
 void imprimirDesenho(int Maze[], int tamanhoTotal, int nColunas, int paredes[], int nLinhas)
 {
     bool condicao = true;
-    int count = 0;
+    int count = 0; //conta as linhas que estão sendo impressas
     int celulaInicial = 0;
+    string espacoAux = "";
     while(condicao)
     {
         celulaInicial = count * nColunas;
 
-        for(int i = celulaInicial; i < (celulaInicial + nColunas); i++)
-        {
-            //Imprime norte
-            if(verificarParedeIntacta(Maze, i, paredes[0]))
+        if(count == 0){ //Só imprime o norte da primeira linha (evitar paredes duplas)
+            cout << "-"; //para alinhar com colunas
+            for(int i = celulaInicial; i < (celulaInicial + nColunas); i++)
             {
-                cout << "---";
-            }else{
-                cout << "   ";
-            }    
+                //Imprime norte
+                if(verificarParedeIntacta(Maze, i, paredes[0]))
+                {
+                    cout << "---";
+                }else{
+                    cout << "  -";
+                }    
+            }
+            cout << endl;
         }
-        cout << endl;
         //Percorre a linha inteira
         for(int i = celulaInicial; i < (celulaInicial + nColunas); i++)
         {
             //Imprime oeste
             if(verificarParedeIntacta(Maze, i, paredes[3]))
             {
-                cout << "|";
+                if((i % nColunas) == 0) //Só imprime oeste se for a primeira coluna (evitar pardes duplas)
+                    cout << "|";
+
                 //Imprime leste
                 if(verificarParedeIntacta(Maze, i, paredes[1]))
                 {
-                    cout << " |";
+                    cout << espacoAux << "  |";
+                }else{
+                    cout << espacoAux << "   ";
                 }
             }else{
+                if((i % nColunas) == 0) //espaço onde ficaria a parede oeste da primeira coluna
+                    cout << " ";
+
                 //Imprime leste
                 if(verificarParedeIntacta(Maze, i, paredes[1]))
                 {
@@ -206,6 +217,7 @@ void imprimirDesenho(int Maze[], int tamanhoTotal, int nColunas, int paredes[], 
             }
         }
         cout << endl;   
+        cout << "-"; //para alinhar com colunas
         //Percorre a linha inteira
         for(int i = celulaInicial; i < (celulaInicial + nColunas); i++)
         {
@@ -214,7 +226,7 @@ void imprimirDesenho(int Maze[], int tamanhoTotal, int nColunas, int paredes[], 
             {
                 cout << "---";
             }else{
-                cout << "   ";
+                cout << "  -";
             }    
         }
         cout << endl;
@@ -302,8 +314,12 @@ void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool tot
             {
                 concluido = 1;
             }
-            //Depois: Válido
-            
+            //Apenas Válido
+            if(!totalConexo && (conjuntos.find(posicaoInicial) == conjuntos.find(posicaoFinal)))
+            {
+                concluido = 1;
+            }
+
             //conjuntos.print();
             //cout << endl;
             //imprimir(Maze, tamanhoTotal, nColunas, paredes);
@@ -312,7 +328,7 @@ void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool tot
 
 
             imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas);
-            usleep(250 * 1000);
+            usleep(150 * 1000);
         }
 
         int qualquerCoisa = 0;
