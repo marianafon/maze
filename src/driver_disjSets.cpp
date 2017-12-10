@@ -17,6 +17,7 @@
 //#define LeftWall 0x08; //oeste
 
 using namespace std;
+void Usage(char* prog_name);
 bool verificarParedeIntacta(int Maze[], int posicao, int parede);
 void derrubarParede(int Maze[], int posicao, int parede, int vizinho);
 void criarLabirinto(int Maze[], int nColunas, int nLinhas, int paredes[], bool totalConexo);
@@ -27,7 +28,7 @@ void imprimirDesenho(int Maze[], int tamanhoTotal, int nColunas, int paredes[], 
 bool encontrarSolucao(int Maze[], int nColunas, int nLinhas, int paredes[], string MazeSolution[]);
 void inicializarMazeSolution(string MazeSolution[], int tamanhoTotal);
 
-int main( )
+int main(int argc, char* argv[])
 {
     auto n_unit{0}; // unit test count.
 
@@ -38,11 +39,17 @@ int main( )
 
     int paredes[] = {TopWall, RightWall, BottomWall, LeftWall};
 
-    int nColunas = 15;
-    int nLinhas = 15;
-    bool totalConexo = 0;
+    int nColunas = 10;
+    int nLinhas = 10;
+    bool totalConexo = 1;
     int tamanhoTotal = nColunas * nLinhas;
-    string tipoLabirinto = "Totalmente Conexo";
+    string tipoLabirinto = "Totalmente Conexo";    
+
+    //Obtendo parâmetros da execução
+    //if (argc != 4) Usage(argv[0]);
+    //nLinhas = strtol(argv[1], NULL, 10);
+    //nColunas = strtol(argv[2], NULL, 10);
+    //totalConexo = strtol(argv[3], NULL, 10);
 
     if(!totalConexo)
     {
@@ -430,4 +437,10 @@ bool encontrarSolucao(int Maze[], int nColunas, int nLinhas, int paredes[], stri
     //Imprime a solução    
     imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas, MazeSolution);
     cout << "--------- SOLUÇÃO ENCONTRADA!! :D ---------" << endl;
+}
+
+void Usage(char* prog_name) {
+
+   fprintf(stderr, "usage: %s <nLinhas> <nColunas> <totalmenteConexo (1 ou 0)>\n", prog_name);
+   exit(0);
 }
