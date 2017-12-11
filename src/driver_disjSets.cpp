@@ -20,7 +20,7 @@ using namespace std;
 void Usage(char* prog_name);
 bool verificarParedeIntacta(int Maze[], int posicao, int parede);
 void derrubarParede(int Maze[], int posicao, int parede, int vizinho);
-void criarLabirinto(int Maze[], int nColunas, int nLinhas, int paredes[], bool totalConexo);
+void criarLabirinto(int Maze[], int nColunas, int nLinhas, int paredes[]);
 void imprimir(int Maze[], int tamanhoTotal, int nColunas, int paredes[]);
 int buscarCelulaVizinhaParede(int posicao, int nColunas, int nLinhas, int parede);
 void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool totalConexo, DisjSets &conjuntos, string MazeSolution[]);
@@ -41,15 +41,17 @@ int main(int argc, char* argv[])
 
     int nColunas = 10;
     int nLinhas = 10;
-    bool totalConexo = 1;
-    int tamanhoTotal = nColunas * nLinhas;
+    bool totalConexo = false;
+    int tamanhoTotal = 0;
     string tipoLabirinto = "Totalmente Conexo";    
 
     //Obtendo parâmetros da execução
-    //if (argc != 4) Usage(argv[0]);
-    //nLinhas = strtol(argv[1], NULL, 10);
-    //nColunas = strtol(argv[2], NULL, 10);
-    //totalConexo = strtol(argv[3], NULL, 10);
+    if (argc != 4) Usage(argv[0]);
+    nLinhas = (int)strtol(argv[1], NULL, 10);
+    nColunas = (int)strtol(argv[2], NULL, 10);
+    totalConexo = (bool)strtol(argv[3], NULL, 10);
+    tamanhoTotal = nColunas * nLinhas;
+    cout << nLinhas << nColunas << totalConexo << tamanhoTotal;
 
     if(!totalConexo)
     {
@@ -69,7 +71,7 @@ int main(int argc, char* argv[])
     //Criar Labirinto
     cout << "Criando labirinto..." << endl;
     int Maze[ tamanhoTotal ];
-    criarLabirinto(Maze, nColunas, nLinhas, paredes, 1);    
+    criarLabirinto(Maze, nColunas, nLinhas, paredes);    
         
     //Criar caminho segundo parâmetro e imprimindo andamento
     cout << "Criando caminho " << tipoLabirinto << " ..." << endl;
@@ -277,7 +279,7 @@ void imprimir(int Maze[], int tamanhoTotal, int nColunas, int paredes[])
     cout << endl << endl;
 }
 
-void criarLabirinto(int Maze[], int nColunas, int nLinhas, int paredes[], bool totalConexo){
+void criarLabirinto(int Maze[], int nColunas, int nLinhas, int paredes[]){
     //cout << "Criando Labirinto " << nLinhas << "x" << nColunas << " ..." << endl;
     
     int tamanhoTotal = nColunas * nLinhas;
@@ -440,7 +442,7 @@ bool encontrarSolucao(int Maze[], int nColunas, int nLinhas, int paredes[], stri
 }
 
 void Usage(char* prog_name) {
-
-   fprintf(stderr, "usage: %s <nLinhas> <nColunas> <totalmenteConexo (1 ou 0)>\n", prog_name);
-   exit(0);
+    fprintf(stderr, "usage: %s <nLinhas> <nColunas> <totalmenteConexo (1 ou 0)>\n", prog_name);
+    printf("Sendo: nLinhas <= 100 e nColunas <= 100\n");
+    exit(0);
 }
