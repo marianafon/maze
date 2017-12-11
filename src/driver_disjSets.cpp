@@ -51,7 +51,6 @@ int main(int argc, char* argv[])
     nColunas = (int)strtol(argv[2], NULL, 10);
     totalConexo = (bool)strtol(argv[3], NULL, 10);
     tamanhoTotal = nColunas * nLinhas;
-    cout << nLinhas << nColunas << totalConexo << tamanhoTotal;
 
     if(!totalConexo)
     {
