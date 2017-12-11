@@ -47,8 +47,6 @@ class DisjSets
     void unionSets( int root1, int root2 )
     {
         //Unir os elementos do conjunto que contém root1 com os dos que contém root2
-        //int disjRoot1 = s[root1];
-        //int disjRoot2 = s[root2];
         int disjRoot1 = find(root1);
         int disjRoot2 = find(root2);
 
@@ -56,10 +54,6 @@ class DisjSets
         {
             for(int i = 0; i<elementsCount; i++)
             {
-                //if(s[i] == disjRoot2)
-                //{
-                //    s[i] = disjRoot1;
-                //}
                 if(find(i) == disjRoot2)
                 {
                     s[i] = disjRoot1;
@@ -73,7 +67,6 @@ class DisjSets
     {
         for(int i = 0; i<elementsCount; i++)
         {
-            //for(int j = 0; j < disjCount; j++)
             cout << i << "{" << s[i] << "} ";
         }
     }

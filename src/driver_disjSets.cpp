@@ -11,11 +11,6 @@
 
 #include "../include/disjSets.h"
 
-//#define TopWall 0x01; //norte 
-//#define RightWall 0x02; //leste
-//#define BottomWall 0x04; //sul
-//#define LeftWall 0x08; //oeste
-
 using namespace std;
 void Usage(char* prog_name);
 bool verificarParedeIntacta(int Maze[], int posicao, int parede);
@@ -30,8 +25,6 @@ void inicializarMazeSolution(string MazeSolution[], int tamanhoTotal);
 
 int main(int argc, char* argv[])
 {
-    auto n_unit{0}; // unit test count.
-
     int TopWall = 0x01; //norte 
     int RightWall = 0x02; //leste
     int BottomWall = 0x04; //sul
@@ -353,6 +346,7 @@ void criarCaminho(int Maze[], int nColunas, int nLinhas, int paredes[], bool tot
     //imprimir(Maze, tamanhoTotal, nColunas, paredes);
     //cout << "Conjuntos" << endl;
     //conjuntos.print();
+    cout << "Labirinto " << tipoLabirinto << " " << nLinhas << "x" << nColunas << ":" << endl;
     cout << endl;
     imprimirDesenho(Maze, tamanhoTotal, nColunas, paredes, nLinhas, MazeSolution);
     cout << "--------- LABIRINTO CONCLUIDO ---------" << endl;
